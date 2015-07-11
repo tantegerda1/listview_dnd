@@ -1,7 +1,7 @@
 ***********************
 Drag&Drop for list view
 ***********************
-Enables drag&drop for records in backend list module (list view).
+Enables drag&drop for records in TYPO3 backend list module (list view).
 
 Provides the following functionalities :
 
