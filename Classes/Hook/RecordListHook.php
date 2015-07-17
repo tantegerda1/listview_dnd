@@ -54,7 +54,8 @@ class RecordListHook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookI
 	 * @see \TYPO3\CMS\Recordlist\RecordList\RecordListHookInterface::makeControl()
 	 */
 	public function makeControl($table, $row, $cells, &$parentObject) {
-		if(in_array($table, $this->pageTsConfig) &&
+		if(is_array($this->pageTsConfig) &&
+				in_array($table, $this->pageTsConfig) &&
 				$this->canMove($cells) &&
 				! $GLOBALS['SOBE']->MOD_SETTINGS['localization']) {
 			$cells[] = sprintf('<span class="draggable" style="display: none" data-uid="%s" data-pid="%s" data-table="%s" data-token="%s"></span>', $row['uid'], $row['pid'], $table, BackendUtility::getUrlToken('tceAction'));
