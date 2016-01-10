@@ -54,13 +54,20 @@ class RecordListHook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookI
 	 * @see \TYPO3\CMS\Recordlist\RecordList\RecordListHookInterface::makeControl()
 	 */
 	public function makeControl($table, $row, $cells, &$parentObject) {
-		if(is_array($this->pageTsConfig) &&
-				in_array($table, $this->pageTsConfig) &&
-				$this->canMove($cells) &&
-				! $GLOBALS['SOBE']->MOD_SETTINGS['localization']) {
-			$cells[] = sprintf('<span class="draggable" style="display: none" data-uid="%s" data-pid="%s" data-table="%s" data-token="%s"></span>', $row['uid'], $row['pid'], $table, BackendUtility::getUrlToken('tceAction'));
+		if(is_array($this->pageTsConfig) && in_array($table, $this->pageTsConfig) && $this->canMove($cells) && ! $GLOBALS['SOBE']->MOD_SETTINGS['localization']) {
+			$urlParameters = [
+				'prErr' => 1,
+				'uPT' => 1
+			];
+			if (version_compare(TYPO3_version, '6.99.99', '<=')) {
+				$url = $GLOBALS['SOBE']->doc->issueCommand($urlParameters);
+			} else {
+				$urlParameters['vC'] = $GLOBALS['BE_USER']->veriCode();
+				$url = BackendUtility::getModuleUrl('tce_db', $urlParameters);
+			}
+			$span = sprintf('<span class="draggable" style="display: none" data-uid="%s" data-pid="%s" data-table="%s" data-url="%s"></span>', $row['uid'], $row['pid'], $table, $url);
+			$cells['draggable'] = $span;
 		}
-
 		return $cells;
 	}
 
@@ -87,10 +94,15 @@ class RecordListHook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookI
 	 * @return boolean
 	 */
 	protected function canMove(array $cells) {
-		foreach($cells as $cell) {
-			if(strpos($cell, 't3-icon-actions-move') > 0) {
-				return TRUE;
+		if (version_compare(TYPO3_version, '6.99.99', '<=')) {
+			foreach($cells as $cell) {
+				if(strpos($cell, 't3-icon-actions-move') > 0) {
+					return TRUE;
+				}
 			}
+		} else {
+			$keys = array_keys($cells);
+			return in_array('moveUp', $keys) || in_array('moveDown', $keys);
 		}
 		RETURN FALSE;
 	}

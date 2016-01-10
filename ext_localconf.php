@@ -12,4 +12,4 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Recordlist\\RecordLis
 );
 
 // Hook for recordList
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.db_list_extra.inc']['actions'][] = 'SwordGroup\\ListviewDnd\\Hook\\RecordListHook';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['typo3/class.db_list_extra.inc']['actions']['listview_dnd'] = 'SwordGroup\\ListviewDnd\\Hook\\RecordListHook';
