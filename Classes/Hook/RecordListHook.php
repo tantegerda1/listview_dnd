@@ -59,11 +59,15 @@ class RecordListHook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookI
 				'prErr' => 1,
 				'uPT' => 1
 			];
+			unset($cells['moveUp']);
+			unset($cells['moveDown']);
 			if (version_compare(TYPO3_version, '6.99.99', '<=')) {
 				$url = $GLOBALS['SOBE']->doc->issueCommand($urlParameters);
 			} else {
 				$urlParameters['vC'] = $GLOBALS['BE_USER']->veriCode();
 				$url = BackendUtility::getModuleUrl('tce_db', $urlParameters);
+				unset($cells['secondary']['moveUp']);
+				unset($cells['secondary']['moveDown']);
 			}
 			$span = sprintf('<span class="draggable" style="display: none" data-uid="%s" data-pid="%s" data-table="%s" data-url="%s"></span>', $row['uid'], $row['pid'], $table, $url);
 			$cells['draggable'] = $span;
