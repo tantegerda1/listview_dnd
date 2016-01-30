@@ -1,6 +1,6 @@
 
 {
-  "name": "morinfa/listview_dnd",
+  "name": "morinfa/listview-dnd",
   "type": "typo3-cms-extension",
   "description": "Drag&Drop in list view for TYPO3 CMS.",
   "homepage": "https://github.com/morinfa/listview_dnd",
