@@ -15,6 +15,10 @@
 
 namespace SwordGroup\ListviewDnd;
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Extension of RecordList class to load CSS/JS resources for backend module list.
  *
@@ -29,10 +33,20 @@ class RecordList extends \TYPO3\CMS\Recordlist\RecordList {
 	public function __construct() {
 		parent::__construct();
 
-		$GLOBALS['TBE_TEMPLATE']->getPageRenderer()->addJsInlineCode('typo3_version', 'var sg_t3version="' . TYPO3_version . '";');
-		$GLOBALS['TBE_TEMPLATE']->getPageRenderer()->loadJquery();
-		$GLOBALS['TBE_TEMPLATE']->getPageRenderer()->loadRequireJs();
-		$GLOBALS['TBE_TEMPLATE']->getPageRenderer()->addJsFile(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('listview_dnd') . 'Resources/Public/JavaScript/dnd.js');
+		// TYPO3 < 8 compatibility
+		if (version_compare(TYPO3_version, '8.0', 'lt')) {
+			$GLOBALS['TBE_TEMPLATE']->addJsInlineCode('typo3_version', 'var sg_t3version="' . TYPO3_version . '";');
+			$GLOBALS['TBE_TEMPLATE']->loadJquery();
+			$GLOBALS['TBE_TEMPLATE']->loadRequireJs();
+			$GLOBALS['TBE_TEMPLATE']->addJsFile(ExtensionManagementUtility::extRelPath('listview_dnd') . 'Resources/Public/JavaScript/dnd.js');
+			return;
+		}
+
+		$renderer = GeneralUtility::makeInstance(PageRenderer::class);
+		$renderer->addJsInlineCode('typo3_version', 'var sg_t3version="' . TYPO3_version . '";');
+		$renderer->loadJquery();
+		$renderer->loadRequireJs();
+		$renderer->addJsFile(ExtensionManagementUtility::siteRelPath('listview_dnd') . 'Resources/Public/JavaScript/dnd.js');
 	}
 }
 
